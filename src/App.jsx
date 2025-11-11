@@ -1,3 +1,3 @@
-import {Task} from './components/Task';
+import { BibliotecaJuegos } from './components/BibliotecaJuegos';
 
-export const App = () => <Task />;
+export const App = () => <BibliotecaJuegos />;
