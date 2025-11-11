@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useAppContext } from "../context/AppContext";
 
 const API_URL = "http://localhost:5000/api/reseñas";
 
 export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
+  const { triggerRefresh } = useAppContext();
+  const [hoverRating, setHoverRating] = useState(0);
   const [formData, setFormData] = useState({
     puntuacion: 5,
     horasJugadas: 0,
@@ -32,6 +35,7 @@ export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
 
       const data = await response.json();
       onReseñaCreada(data);
+      triggerRefresh(); // Refrescar stats y progreso
       setFormData({
         puntuacion: 5,
         horasJugadas: 0,
@@ -47,15 +51,24 @@ export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
   return (
     <form onSubmit={handleSubmit} className="reseña-form">
       <h4> Añadir reseña</h4>
-      <label>Puntuación (1–5)</label>
-      <input
-        type="number"
-        name="puntuacion"
-        min="1"
-        max="5"
-        value={formData.puntuacion}
-        onChange={handleChange}
-      />
+      <label>Puntuación</label>
+      <div className="star-rating" role="radiogroup" aria-label="Puntuación">
+        {[1,2,3,4,5].map((n) => (
+          <button
+            key={n}
+            type="button"
+            className={`star ${hoverRating > 0 ? (hoverRating >= n ? 'filled' : '') : (formData.puntuacion >= n ? 'filled' : '')}`}
+            onClick={() => setFormData({ ...formData, puntuacion: n })}
+            onMouseEnter={() => setHoverRating(n)}
+            onMouseLeave={() => setHoverRating(0)}
+            aria-pressed={formData.puntuacion >= n}
+            aria-label={`${n} estrellas`}
+            title={`${n} estrellas`}
+          >
+            ★
+          </button>
+        ))}
+      </div>
 
       <label>Horas jugadas</label>
       <input

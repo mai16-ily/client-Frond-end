@@ -7,7 +7,7 @@
   --color-text-light: #222;
   --color-card-dark: #1a1a2e;
   --color-card-light: #f7f7f7;
-  --color-accent: #00fff5;
+  --color-accent: #9cb1f5;
   --transition-speed: 0.3s;
 }
 
@@ -26,22 +26,56 @@ body.light-mode {
 
 .app-container {
   min-height: 100vh;
+  display: flex;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+
+body.light-mode .app-container {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 280px;
   padding: 2rem;
+  transition: all var(--transition-speed) ease-in-out;
 }
 
-.theme-toggle {
-  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  position: fixed;
-  top: 20px;
-  right: 20px;
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-direction: column; /* logo above title, centered */
 }
 
-.theme-toggle:hover {
-  transform: scale(1.05);
+.logo-placeholder {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+
+/* Responsive: cuando el sidebar se convierte en horizontal */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
 }

@@ -13,7 +13,7 @@ export const EstadisticasPersonales = () => {
     horasTotales: 0,
   });
 
-  // 🔹 Cargar los juegos desde el backend
+
   const fetchJuegos = async () => {
     try {
       const res = await fetch(API_URL);
@@ -52,7 +52,7 @@ export const EstadisticasPersonales = () => {
 
   return (
     <div className="estadisticas-container">
-      <h2>📊 Estadísticas Personales</h2>
+      <h2>Estadísticas Personales</h2>
       <div className="estadisticas-cards">
         <div className="card">
           <h3>{estadisticas.total}</h3>
@@ -72,7 +72,6 @@ export const EstadisticasPersonales = () => {
         </div>
       </div>
 
-      {/* 🔹 Gráfico de barras (horas jugadas por juego) */}
       <div className="grafico">
         <h3>Horas jugadas por juego</h3>
         <ResponsiveContainer width="100%" height={300}>

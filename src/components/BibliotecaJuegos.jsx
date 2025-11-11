@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import './BibliotecaJuegos.css'; 
 import { ListaReseñas } from "./ListaReseñas";
 import { FormularioReseña } from "./FormularioReseña";
-import './BibliotecaJuegos.css';
+import { useAppContext } from '../context/AppContext';
 
 const API_URL = 'http://localhost:5000/api/juegos';
 
 export const BibliotecaJuegos = () => {
+  const { triggerRefresh } = useAppContext();
   const [juegos, setJuegos] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({});
   const [nuevoJuego, setNuevoJuego] = useState({
   titulo: '',
   genero: '',
@@ -42,6 +45,7 @@ export const BibliotecaJuegos = () => {
       const data = await response.json();
       setJuegos([...juegos, data]);
       setNuevoJuego({ titulo: '', genero: '', plataforma: '', imagenPortada: '', añoLanzamiento: '', desarrollador: '', descripcion: '' });
+      triggerRefresh(); // Actualizar stats
     } catch (error) {
       console.error('Error al crear juego:', error);
     }
@@ -52,8 +56,45 @@ export const BibliotecaJuegos = () => {
     try {
       await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
       setJuegos(juegos.filter((j) => j._id !== id));
+      triggerRefresh(); // Actualizar stats
     } catch (error) {
       console.error('Error al eliminar juego:', error);
+    }
+  };
+
+  // 🟢 Editar juego (iniciar)
+  const startEdit = (juego) => {
+    setEditingId(juego._id);
+    setEditForm({
+      titulo: juego.titulo || '',
+      genero: juego.genero || '',
+      plataforma: juego.plataforma || '',
+      añoLanzamiento: juego.añoLanzamiento || '',
+      desarrollador: juego.desarrollador || '',
+      imagenPortada: juego.imagenPortada || '',
+      descripcion: juego.descripcion || '',
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm({});
+  };
+
+  const saveEdit = async (id) => {
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm),
+      });
+      const updated = await res.json();
+      setJuegos(juegos.map((j) => (j._id === id ? updated : j)));
+      setEditingId(null);
+      setEditForm({});
+      triggerRefresh(); // Actualizar stats
+    } catch (error) {
+      console.error('Error al guardar cambios:', error);
     }
   };
 
@@ -63,7 +104,7 @@ export const BibliotecaJuegos = () => {
 
   return (
     <div className="container-todolist">
-      <div className="title"><h2>🎮 Biblioteca de Juegos</h2></div>
+      <div className="title"><h2>Biblioteca de Juegos</h2></div>
 
       <form onSubmit={addJuego}>
   <label>Agregar nuevo juego</label>
@@ -113,29 +154,51 @@ export const BibliotecaJuegos = () => {
 
 
       <div className="juegos-list">
-        <ul className="list-todolist">
+        <div className="games-grid">
           {juegos.map((juego) => (
-            <li key={juego._id} className="item-todolist">
-              {juego.imagenPortada && (
-                <img src={juego.imagenPortada} alt={juego.titulo} width="50" height="50" />
-           )}
-              <span className="info-juego">
-                <strong>{juego.titulo}</strong> ({juego.añoLanzamiento})<br />
-                {juego.genero} — {juego.plataforma}<br />
-                Desarrollado por: {juego.desarrollador}<br />
-                {juego.descripcion && <em>{juego.descripcion}</em>}
-              </span>
-              <button onClick={() => deleteJuego(juego._id)} className="btn-del">Eliminar</button>
-              <ListaReseñas juegoId={juego._id} />
-              <FormularioReseña
-                juegoId={juego._id}
-                onReseñaCreada={() => fetchJuegos()} // refresca lista al crear reseña
-              />
+            <article key={juego._id} className="game-card">
+              <div className="card-image">
+                {juego.imagenPortada ? (
+                  <img src={juego.imagenPortada} alt={juego.titulo} />
+                ) : (
+                  <div className="image-placeholder">No image</div>
+                )}
+              </div>
 
-            </li>
-        ))}
-        </ul>
-
+              <div className="card-body">
+                
+                {editingId === juego._id ? (
+                  <div className="edit-form">
+                    <input value={editForm.titulo} onChange={(e) => setEditForm({ ...editForm, titulo: e.target.value })} />
+                    <input value={editForm.genero} onChange={(e) => setEditForm({ ...editForm, genero: e.target.value })} />
+                    <input value={editForm.plataforma} onChange={(e) => setEditForm({ ...editForm, plataforma: e.target.value })} />
+                    <input type="number" value={editForm.añoLanzamiento} onChange={(e) => setEditForm({ ...editForm, añoLanzamiento: e.target.value })} />
+                    <input value={editForm.desarrollador} onChange={(e) => setEditForm({ ...editForm, desarrollador: e.target.value })} />
+                    <input value={editForm.imagenPortada} onChange={(e) => setEditForm({ ...editForm, imagenPortada: e.target.value })} />
+                    <textarea value={editForm.descripcion} onChange={(e) => setEditForm({ ...editForm, descripcion: e.target.value })} />
+                    <div className="card-actions">
+                      <button className="btn-save" onClick={() => saveEdit(juego._id)}>Guardar</button>
+                      <button className="btn-cancel" onClick={cancelEdit}>Cancelar</button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <h3 className="game-title">{juego.titulo}</h3>
+                    <div className="meta">{juego.genero} • {juego.plataforma} • {juego.añoLanzamiento}</div>
+                    <div className="developer">Desarrollador: {juego.desarrollador}</div>
+                    {juego.descripcion && <p className="desc">{juego.descripcion}</p>}
+                    <div className="card-actions">
+                      <button className="btn-edit" onClick={() => startEdit(juego)}>Editar</button>
+                      <button className="btn-del" onClick={() => deleteJuego(juego._id)}>Eliminar</button>
+                    </div>
+                    <ListaReseñas juegoId={juego._id} />
+                    <FormularioReseña juegoId={juego._id} onReseñaCreada={() => fetchJuegos()} />
+                  </>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );
