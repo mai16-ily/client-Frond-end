@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
-import './Task.css'; // Puedes renombrarlo luego a BibliotecaJuegos.css
+import './BibliotecaJuegos.css'; 
+import { ListaReseñas } from "./ListaReseñas";
+import { FormularioReseña } from "./FormularioReseña";
+
 
 const API_URL = 'http://localhost:5000/api/juegos';
 
@@ -109,20 +112,26 @@ export const BibliotecaJuegos = () => {
 </form>
 
 
-      <div className="tasks">
+      <div className="juegos-list">
         <ul className="list-todolist">
           {juegos.map((juego) => (
             <li key={juego._id} className="item-todolist">
               {juego.imagenPortada && (
                 <img src={juego.imagenPortada} alt={juego.titulo} width="50" height="50" />
            )}
-              <span className="desc-task">
+              <span className="info-juego">
                 <strong>{juego.titulo}</strong> ({juego.añoLanzamiento})<br />
                 {juego.genero} — {juego.plataforma}<br />
                 Desarrollado por: {juego.desarrollador}<br />
                 {juego.descripcion && <em>{juego.descripcion}</em>}
               </span>
               <button onClick={() => deleteJuego(juego._id)} className="btn-del">Eliminar</button>
+              <ListaReseñas juegoId={juego._id} />
+              <FormularioReseña
+                juegoId={juego._id}
+                onReseñaCreada={() => fetchJuegos()} // refresca lista al crear reseña
+              />
+
             </li>
         ))}
         </ul>
