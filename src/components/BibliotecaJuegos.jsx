@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './BibliotecaJuegos.css'; 
 import { ListaReseñas } from "./ListaReseñas";
 import { FormularioReseña } from "./FormularioReseña";
-
+import './BibliotecaJuegos.css';
 
 const API_URL = 'http://localhost:5000/api/juegos';
 

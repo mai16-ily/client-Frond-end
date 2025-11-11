@@ -1,12 +1,47 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root {
+  --color-bg-dark: #0f0e17;
+  --color-bg-light: #ffffff;
+  --color-primary: #7b2ff7;
+  --color-secondary: #f107a3;
+  --color-text-dark: #e0e0e0;
+  --color-text-light: #222;
+  --color-card-dark: #1a1a2e;
+  --color-card-light: #f7f7f7;
+  --color-accent: #00fff5;
+  --transition-speed: 0.3s;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  padding: 20px;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+  font-family: 'Poppins', sans-serif;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+  margin: 0;
+}
+
+body.light-mode {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+}
+
+.app-container {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.theme-toggle {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
 }

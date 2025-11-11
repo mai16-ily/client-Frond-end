@@ -1,0 +1,218 @@
+.container-todolist {
+  max-width: 1000px;
+  margin: 80px auto;
+  background-color: var(--color-card-dark);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  transition: background-color var(--transition-speed);
+}
+
+body.light-mode .container-todolist {
+  background-color: var(--color-card-light);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.title h2 {
+  text-align: center;
+  color: var(--color-accent);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+form input, form textarea, form select {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  outline: none;
+  background-color: #1f2030;
+  color: #e8e8ee;
+  transition: all 0.18s ease-in-out;
+  box-shadow: 0 2px 8px rgba(9,10,20,0.35) inset;
+  font-size: 0.95rem;
+}
+
+body.light-mode form input,
+body.light-mode form textarea,
+body.light-mode form select {
+  background-color: #fff;
+  color: #222;
+  border: 1px solid #e6e6e6;
+  box-shadow: none;
+}
+
+form button {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+form button:hover {
+  transform: scale(1.03);
+}
+
+.list-todolist {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.item-todolist {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, background 0.3s;
+}
+
+.item-todolist:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.1);
+}
+
+.item-todolist img {
+  border-radius: 10px;
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.btn-del {
+  background: #ff4d6d;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-del:hover {
+  transform: scale(1.05);
+}
+
+/* Reseñas */
+.reseña-form, .reseñas-lista {
+  margin-top: 15px;
+  background-color: rgba(20,20,30,0.45);
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 8px 30px rgba(6,7,15,0.45);
+}
+
+body.light-mode .reseña-form,
+body.light-mode .reseñas-lista {
+  background-color: rgba(255,255,255,0.8);
+}
+
+.reseña-form h4, .reseñas-lista h4 {
+  color: var(--color-accent);
+  margin-bottom: 10px;
+}
+
+/* Estilos específicos del formulario de reseña para inputs/labels */
+.reseña-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: rgba(255,255,255,0.9);
+}
+
+.reseña-form input[type="number"],
+.reseña-form select,
+.reseña-form textarea,
+.reseña-form input[type="text"] {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Select personalizado */
+.reseña-form select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e8e8ee'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 40px;
+}
+
+/* Focus states */
+.reseña-form input:focus,
+.reseña-form select:focus,
+.reseña-form textarea:focus,
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: rgba(100,150,255,0.9);
+  box-shadow: 0 6px 24px rgba(60,100,255,0.06), 0 0 0 4px rgba(100,150,255,0.06);
+  transform: translateY(-1px);
+}
+
+/* Checkbox modern */
+.reseña-form input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  accent-color: var(--color-primary);
+}
+
+/* Botones refinados */
+.reseña-form button, form button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 8px 20px rgba(14,16,30,0.45);
+}
+
+/* Placeholder color */
+form input::placeholder, form textarea::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.reseñas-lista ul {
+  list-style: none;
+  padding: 0;
+}
+
+.reseñas-lista li {
+  background-color: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container-todolist {
+    padding: 20px;
+    margin: 50px 10px;
+  }
+
+  .item-todolist img {
+    max-height: 150px;
+  }
+
+  form {
+    grid-template-columns: 1fr;
+  }
+}
