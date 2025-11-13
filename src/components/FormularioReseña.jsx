@@ -6,6 +6,9 @@ const API_URL = "http://localhost:5000/api/reseñas";
 export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
   const { triggerRefresh } = useAppContext();
   const [hoverRating, setHoverRating] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     puntuacion: 5,
     horasJugadas: 0,
@@ -24,18 +27,36 @@ export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
     try {
+      const reseñaParaEnviar = {
+        ...formData,
+        horasJugadas: parseInt(formData.horasJugadas, 10),
+        puntuacion: parseInt(formData.puntuacion, 10),
+        juegoId,
+      };
+
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, juegoId }),
+        body: JSON.stringify(reseñaParaEnviar),
       });
 
-      if (!response.ok) throw new Error("Error al enviar la reseña");
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || "Error al enviar la reseña");
+      }
 
       const data = await response.json();
-      if (onReseñaCreada) onReseñaCreada();
-      triggerRefresh(); // Refrescar stats y progreso
+      console.log("Reseña guardada:", data);
+      
+      setSuccess("¡Reseña guardada exitosamente!");
+      setTimeout(() => setSuccess(''), 3000);
+      
+      // Limpiar formulario
       setFormData({
         puntuacion: 5,
         horasJugadas: 0,
@@ -43,21 +64,42 @@ export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
         recomendacion: true,
         textoReseña: "",
       });
+
+      // Callback si existe
+      if (onReseñaCreada) onReseñaCreada();
+      
+      // Disparar refresh global para actualizar stats y lista de reseñas
+      triggerRefresh();
     } catch (error) {
       console.error("Error:", error);
+      setError(error.message || "Error al guardar la reseña");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="reseña-form">
-      <h4> Añadir reseña</h4>
+      {error && <div className="alert alert-error">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
+
+      <h4>Añadir reseña</h4>
+
       <label>Puntuación</label>
       <div className="star-rating" role="radiogroup" aria-label="Puntuación">
-        {[1,2,3,4,5].map((n) => (
+        {[1, 2, 3, 4, 5].map((n) => (
           <button
             key={n}
             type="button"
-            className={`star ${hoverRating > 0 ? (hoverRating >= n ? 'filled' : '') : (formData.puntuacion >= n ? 'filled' : '')}`}
+            className={`star ${
+              hoverRating > 0
+                ? hoverRating >= n
+                  ? "filled"
+                  : ""
+                : formData.puntuacion >= n
+                ? "filled"
+                : ""
+            }`}
             onClick={() => setFormData({ ...formData, puntuacion: n })}
             onMouseEnter={() => setHoverRating(n)}
             onMouseLeave={() => setHoverRating(0)}
@@ -76,6 +118,7 @@ export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
         name="horasJugadas"
         value={formData.horasJugadas}
         onChange={handleChange}
+        min="0"
       />
 
       <label>Dificultad</label>
@@ -99,14 +142,18 @@ export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
         ¿Recomiendas este juego?
       </label>
 
+      <label>Escribe tu reseña...</label>
       <textarea
         name="textoReseña"
-        placeholder="Escribe tu reseña..."
+        placeholder="Comparte tu experiencia con este juego..."
         value={formData.textoReseña}
         onChange={handleChange}
+        rows="3"
       ></textarea>
 
-      <button type="submit">Guardar reseña</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Guardando..." : "Guardar reseña"}
+      </button>
     </form>
   );
 };

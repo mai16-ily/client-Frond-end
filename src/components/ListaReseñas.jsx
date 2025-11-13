@@ -12,9 +12,10 @@ export const ListaReseñas = ({ juegoId }) => {
       if (!juegoId) return setReseñas([]);
       const response = await fetch(`${API_URL}/juego/${juegoId}`);
       const data = await response.json();
-      setReseñas(data);
+      setReseñas(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error al obtener reseñas:", error);
+      setReseñas([]);
     }
   };
 
@@ -22,11 +23,11 @@ export const ListaReseñas = ({ juegoId }) => {
     fetchReseñas();
   }, [juegoId, refreshTrigger]);
 
-  if (!reseñas.length) return <p>No hay reseñas aún.</p>;
+  if (!reseñas || reseñas.length === 0) return null;
 
   return (
     <div className="reseñas-lista">
-      <h4> Reseñas</h4>
+      <h4>Reseñas</h4>
       <ul>
         {reseñas.map((r) => (
           <li key={r._id}>

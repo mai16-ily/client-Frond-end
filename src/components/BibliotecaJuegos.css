@@ -8,6 +8,38 @@
   transition: background-color var(--transition-speed);
 }
 
+/* Mensajes de alerta */
+.alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-error {
+  background-color: rgba(255, 77, 109, 0.15);
+  border: 1px solid rgba(255, 77, 109, 0.5);
+  color: #ff4d6d;
+}
+
+.alert-success {
+  background-color: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  color: #4caf50;
+}
+
 .item-todolist {
   overflow: visible; 
   flex-wrap: wrap;
@@ -120,6 +152,8 @@ form button:hover {
   border: 1px solid rgba(255,255,255,0.03);
   box-shadow: 0 8px 30px rgba(6,7,15,0.45);
   transition: all var(--transition-speed) ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 body.light-mode .reseña-form,
@@ -159,6 +193,21 @@ body.light-mode .reseña-form label {
 .reseña-form {
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reseña-form h4 {
+  margin: 0 0 10px 0;
+}
+
+.reseña-form > label {
+  display: block;
+}
+
+.reseña-form .star-rating {
+  margin-bottom: 12px;
 }
 
 @media (max-width: 520px) {
@@ -186,6 +235,7 @@ body.light-mode .reseña-form label {
 .reseña-form button[type="submit"] {
   width: 100%;
   padding: 10px 12px;
+  margin-top: 8px;
 }
 
 .reseña-form select {
@@ -278,14 +328,14 @@ body.light-mode form textarea::placeholder {
 /*card view */
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 18px;
 }
 
 .game-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 30px rgba(0,0,0,0.35);
@@ -317,6 +367,8 @@ body.light-mode form textarea::placeholder {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex-grow: 1;
+  overflow: visible;
 }
 
 .game-title {
@@ -454,10 +506,22 @@ body.light-mode .star.filled {
 
 .reseña-form textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 80px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .reseña-form button {
   margin-top: 10px;
   align-self: flex-end;
+}
+
+.reseña-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reseña-form .alert {
+  margin-bottom: 12px;
+  margin-top: 0;
 }

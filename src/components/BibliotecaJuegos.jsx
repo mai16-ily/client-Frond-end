@@ -11,6 +11,8 @@ export const BibliotecaJuegos = () => {
   const [juegos, setJuegos] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [nuevoJuego, setNuevoJuego] = useState({
   titulo: '',
   genero: '',
@@ -22,7 +24,6 @@ export const BibliotecaJuegos = () => {
 });
 
 
-  // 🟢 Cargar juegos desde el backend
   const fetchJuegos = async () => {
     try {
       const response = await fetch(API_URL);
@@ -33,32 +34,63 @@ export const BibliotecaJuegos = () => {
     }
   };
 
-  // 🟢 Crear nuevo juego
   const addJuego = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+    
+    // Validar campos requeridos
+    if (!nuevoJuego.titulo.trim() || !nuevoJuego.genero.trim() || !nuevoJuego.plataforma.trim() || !nuevoJuego.desarrollador.trim() || !nuevoJuego.añoLanzamiento) {
+      setError('Por favor completa todos los campos requeridos (Título, Género, Plataforma, Año, Desarrollador)');
+      return;
+    }
+
     try {
+      // Convertir año a número
+      const juegoParaEnviar = {
+        ...nuevoJuego,
+        añoLanzamiento: parseInt(nuevoJuego.añoLanzamiento, 10),
+      };
+
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nuevoJuego),
+        body: JSON.stringify(juegoParaEnviar),
       });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Error al crear el juego');
+      }
+
       const data = await response.json();
       setJuegos([...juegos, data]);
       setNuevoJuego({ titulo: '', genero: '', plataforma: '', imagenPortada: '', añoLanzamiento: '', desarrollador: '', descripcion: '' });
+      setSuccess('¡Juego agregado exitosamente!');
+      setTimeout(() => setSuccess(''), 3000);
       triggerRefresh(); // Actualizar stats
     } catch (error) {
       console.error('Error al crear juego:', error);
+      setError(error.message || 'Error al crear el juego');
     }
   };
 
-  // 🟢 Eliminar juego
   const deleteJuego = async (id) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este juego?')) return;
+
     try {
-      await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Error al eliminar');
+      }
       setJuegos(juegos.filter((j) => j._id !== id));
+      setSuccess('¡Juego eliminado!');
+      setTimeout(() => setSuccess(''), 3000);
       triggerRefresh(); // Actualizar stats
     } catch (error) {
       console.error('Error al eliminar juego:', error);
+      setError(error.message || 'Error al eliminar juego');
     }
   };
 
@@ -79,22 +111,37 @@ export const BibliotecaJuegos = () => {
   const cancelEdit = () => {
     setEditingId(null);
     setEditForm({});
+    setError('');
   };
 
   const saveEdit = async (id) => {
     try {
+      const datosParaEnviar = {
+        ...editForm,
+        añoLanzamiento: parseInt(editForm.añoLanzamiento, 10),
+      };
+
       const res = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editForm),
+        body: JSON.stringify(datosParaEnviar),
       });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Error al actualizar');
+      }
+
       const updated = await res.json();
       setJuegos(juegos.map((j) => (j._id === id ? updated : j)));
       setEditingId(null);
       setEditForm({});
+      setSuccess('¡Juego actualizado!');
+      setTimeout(() => setSuccess(''), 3000);
       triggerRefresh(); // Actualizar stats
     } catch (error) {
       console.error('Error al guardar cambios:', error);
+      setError(error.message || 'Error al guardar cambios');
     }
   };
 
@@ -105,6 +152,9 @@ export const BibliotecaJuegos = () => {
   return (
     <div className="container-todolist">
       <div className="title"><h2>Biblioteca de Juegos</h2></div>
+
+      {error && <div className="alert alert-error">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
 
       <form onSubmit={addJuego}>
   <label>Agregar nuevo juego</label>
@@ -130,6 +180,9 @@ export const BibliotecaJuegos = () => {
     type="number"
     placeholder="Año de lanzamiento"
     value={nuevoJuego.añoLanzamiento}
+    min="1900"
+    max="2099"
+    required
     onChange={(e) => setNuevoJuego({ ...nuevoJuego, añoLanzamiento: e.target.value })}
   />
   <input
