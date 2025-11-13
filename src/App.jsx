@@ -15,10 +15,9 @@ function App() {
             <main className="main-content">
                 <header className="app-header">
                     <div className="logo-placeholder">
-                      {/* Si colocas tu imagen en public/logo.png se mostrará aquí automáticamente. */}
-                      <img className="app-logo" src="/logo.png" alt="App logo (coloca public/logo.png)" />
+                      <img className="app-logo" src="/title-logo.png" alt="Titulo" />
                     </div>
-                    <div className="app-title">Game Tracker</div>
+
                 </header>
                 <BibliotecaJuegos />
                 <EstadisticasPersonales />

@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useAppContext } from '../context/AppContext';
 
 const API_URL = "http://localhost:5000/api/reseñas";
 
 export const ListaReseñas = ({ juegoId }) => {
   const [reseñas, setReseñas] = useState([]);
+  const { refreshTrigger } = useAppContext();
 
   const fetchReseñas = async () => {
     try {
+      if (!juegoId) return setReseñas([]);
       const response = await fetch(`${API_URL}/juego/${juegoId}`);
       const data = await response.json();
       setReseñas(data);
@@ -16,8 +19,8 @@ export const ListaReseñas = ({ juegoId }) => {
   };
 
   useEffect(() => {
-    if (juegoId) fetchReseñas();
-  }, [juegoId]);
+    fetchReseñas();
+  }, [juegoId, refreshTrigger]);
 
   if (!reseñas.length) return <p>No hay reseñas aún.</p>;
 
@@ -27,11 +30,8 @@ export const ListaReseñas = ({ juegoId }) => {
       <ul>
         {reseñas.map((r) => (
           <li key={r._id}>
-            ⭐ {r.puntuacion}/5 — {r.dificultad}  
-            <br />
-            {r.horasJugadas} horas jugadas
-            <br />
-            {r.recomendacion ? "✅ Recomendado" : "❌ No recomendado"}
+            <strong>⭐ {r.puntuacion}/5</strong> — {r.dificultad}
+            <div className="small-meta">{r.horasJugadas} horas • {r.recomendacion ? "✅ Recomendado" : "❌ No recomendado"}</div>
             <p>{r.textoReseña}</p>
           </li>
         ))}

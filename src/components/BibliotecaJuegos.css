@@ -8,6 +8,11 @@
   transition: background-color var(--transition-speed);
 }
 
+.item-todolist {
+  overflow: visible; 
+  flex-wrap: wrap;
+}
+
 body.light-mode .container-todolist {
   background-color: var(--color-card-light);
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -151,7 +156,38 @@ body.light-mode .reseña-form label {
   box-sizing: border-box;
 }
 
-/* Select personalizado */
+.reseña-form {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 520px) {
+  .reseña-form {
+    padding: 12px;
+  }
+  .star {
+    font-size: 1.3rem;
+  }
+  .card-image {
+    height: 120px;
+  }
+}
+
+@media (max-width: 760px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+  .main-content {
+    margin-left: 0; /* ensure no side offset when stack */
+  }
+}
+
+/* Make the submit button full width inside forms */
+.reseña-form button[type="submit"] {
+  width: 100%;
+  padding: 10px 12px;
+}
+
 .reseña-form select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -163,7 +199,7 @@ body.light-mode .reseña-form label {
   padding-right: 40px;
 }
 
-/* Focus states */
+
 .reseña-form input:focus,
 .reseña-form select:focus,
 .reseña-form textarea:focus,
@@ -175,7 +211,6 @@ form textarea:focus {
   transform: translateY(-1px);
 }
 
-/* Checkbox modern */
 .reseña-form input[type="checkbox"] {
   width: 18px;
   height: 18px;
@@ -183,7 +218,6 @@ form textarea:focus {
   accent-color: var(--color-primary);
 }
 
-/* Botones refinados */
 .reseña-form button, form button {
   padding: 10px 14px;
   border-radius: 10px;
@@ -192,7 +226,6 @@ form textarea:focus {
   box-shadow: 0 8px 20px rgba(14,16,30,0.45);
 }
 
-/* Placeholder color */
 form input::placeholder, form textarea::placeholder {
   color: rgba(255,255,255,0.45);
 }
@@ -215,13 +248,12 @@ body.light-mode form textarea::placeholder {
   line-height: 1.5;
 }
 
-/* Ajuste para que las reseñas se adapten al contenido y hagan wrap correctamente */
 .reseñas-lista li {
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-/* Asegurar que el contenedor de reseñas use todo el ancho disponible */
+
 .reseñas-lista {
   width: 100%;
   box-sizing: border-box;
@@ -243,7 +275,7 @@ body.light-mode form textarea::placeholder {
   }
 }
 
-/* Games grid / card view */
+/*card view */
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -364,7 +396,6 @@ body.light-mode .edit-form input, body.light-mode .edit-form textarea {
   border: 1px solid #e6e6e6;
 }
 
-/* Star rating (used in reseña form) */
 .star-rating {
   display: flex;
   gap: 8px;
@@ -409,3 +440,24 @@ body.light-mode .star.filled {
   background: rgba(123, 47, 247, 0.06);
 }
 
+.item-todolist {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible;
+}
+
+.seccion-reseñas {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.reseña-form textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.reseña-form button {
+  margin-top: 10px;
+  align-self: flex-end;
+}

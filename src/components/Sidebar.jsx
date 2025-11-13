@@ -90,7 +90,7 @@ export const Sidebar = ({ toggleTheme }) => {
     <aside className="sidebar">
       {/* Header con logo/título */}
       <div className="sidebar-header">
-        <h1 className="sidebar-title"> Game Tracker <img className='logo-image' src="/src/assets/pictures/logo.png" alt="" /></h1>
+        <h1 className="sidebar-title"> PixelTrack <img className='logo-image' src="/src/assets/pictures/logo.png" alt="" /></h1>
       </div>
 
       {/* Stats rápidas */}

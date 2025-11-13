@@ -34,7 +34,7 @@ export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
       if (!response.ok) throw new Error("Error al enviar la reseña");
 
       const data = await response.json();
-      onReseñaCreada(data);
+      if (onReseñaCreada) onReseñaCreada();
       triggerRefresh(); // Refrescar stats y progreso
       setFormData({
         puntuacion: 5,
