@@ -39,14 +39,12 @@ export const BibliotecaJuegos = () => {
     setError('');
     setSuccess('');
     
-    // Validar campos requeridos
     if (!nuevoJuego.titulo.trim() || !nuevoJuego.genero.trim() || !nuevoJuego.plataforma.trim() || !nuevoJuego.desarrollador.trim() || !nuevoJuego.añoLanzamiento) {
       setError('Por favor completa todos los campos requeridos (Título, Género, Plataforma, Año, Desarrollador)');
       return;
     }
 
     try {
-      // Convertir año a número
       const juegoParaEnviar = {
         ...nuevoJuego,
         añoLanzamiento: parseInt(nuevoJuego.añoLanzamiento, 10),
@@ -94,7 +92,6 @@ export const BibliotecaJuegos = () => {
     }
   };
 
-  // 🟢 Editar juego (iniciar)
   const startEdit = (juego) => {
     setEditingId(juego._id);
     setEditForm({

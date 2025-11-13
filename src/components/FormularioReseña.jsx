@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppContext } from "../context/AppContext";
 
-const API_URL = "http://localhost:5000/api/reseñas";
+const API_URL = "http://localhost:5000/api/resenas";
 
 export const FormularioReseña = ({ juegoId, onReseñaCreada }) => {
   const { triggerRefresh } = useAppContext();
