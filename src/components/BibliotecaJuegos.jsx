@@ -242,7 +242,14 @@ export const BibliotecaJuegos = () => {
                       <button className="btn-del" onClick={() => deleteJuego(juego._id)}>Eliminar</button>
                     </div>
                     <ListaReseñas juegoId={juego._id} />
-                    <FormularioReseña juegoId={juego._id} onReseñaCreada={() => fetchJuegos()} />
+                    <FormularioReseña 
+                       juegoId={juego._id} 
+                        onReseñaCreada={() => {
+                           fetchJuegos();
+                           triggerRefresh();   // para que se actualicen las estadísticas
+                        }} 
+                    />
+
                   </>
                 )}
               </div>

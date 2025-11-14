@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { useAppContext } from "../context/AppContext";  
 import "./EstadisticasPersonales.css";
 
 const API_URL = "http://localhost:5000/api/juegos";
@@ -13,6 +14,7 @@ export const EstadisticasPersonales = () => {
     horasTotales: 0,
   });
 
+  const { refreshTrigger } = useAppContext();  // ← ESCUCHAMOS CAMBIOS
 
   const fetchJuegos = async () => {
     try {
@@ -24,19 +26,22 @@ export const EstadisticasPersonales = () => {
     }
   };
 
-  // 🔹 Calcular estadísticas
   const calcularEstadisticas = (data) => {
     const total = data.length;
     const completados = data.filter((j) => j.completado).length;
     const horasTotales = data.reduce((acc, j) => acc + (j.horasJugadas || 0), 0);
-    const puntuaciones = data.filter((j) => j.puntuacion).map((j) => j.puntuacion);
+
+    const puntuaciones = data
+      .filter((j) => j.puntuacion !== undefined && j.puntuacion !== null)
+      .map((j) => j.puntuacion);
+
     const promedioPuntuacion = puntuaciones.length
       ? (puntuaciones.reduce((a, b) => a + b, 0) / puntuaciones.length).toFixed(1)
       : 0;
 
     setEstadisticas({
       total,
-      completados: ((completados / total) * 100).toFixed(1),
+      completados: total > 0 ? ((completados / total) * 100).toFixed(1) : 0,
       horasTotales,
       promedioPuntuacion,
     });
@@ -44,7 +49,7 @@ export const EstadisticasPersonales = () => {
 
   useEffect(() => {
     fetchJuegos();
-  }, []);
+  }, [refreshTrigger]);  
 
   useEffect(() => {
     if (juegos.length) calcularEstadisticas(juegos);
